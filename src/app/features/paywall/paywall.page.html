@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="toolbar-row">
+      <div class="brand">
+        <span class="logo" role="img" aria-label="ALGEXYZ">
+          <span class="logo-alg" aria-hidden="true">ALG</span><span aria-hidden="true">E</span><span class="logo-xyz" aria-hidden="true">XYZ</span>
+        </span>
+        <span class="screen-title">Plans</span>
+      </div>
+      <button type="button" class="icon-button" aria-label="Close" (click)="close()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="algexyz-page">
+  <div class="page">
+    <h2 class="headline">Choose how deep you want to go.</h2>
+
+    <div class="notice-region" aria-live="polite">
+      @if (notice(); as notice) {
+        <div class="notice" [class.notice-success]="notice.tone === 'success'" [class.notice-error]="notice.tone === 'error'" role="status">
+          <span class="notice-icon" aria-hidden="true">{{ notice.tone === 'success' ? '✓' : notice.tone === 'error' ? '!' : 'i' }}</span>
+          <p class="notice-text">{{ notice.text }}</p>
+          @if (notice.canContinue) {
+            <button type="button" class="btn btn-primary" (click)="close()">Continue</button>
+          }
+        </div>
+      }
+    </div>
+
+    @switch (offersState()) {
+      @case ('unavailable') {
+        <p class="state-card" role="status">Subscriptions are available in the ALGEXYZ Android app.</p>
+      }
+      @case ('error') {
+        <div class="state-card state-error" role="alert">
+          <p>Couldn't load plans. Check your connection and try again.</p>
+          <button type="button" class="btn" (click)="load()">Retry</button>
+        </div>
+      }
+    }
+
+    @for (tier of tiers; track tier.plan) {
+      @let offer = offerFor(tier.plan);
+      <section class="tier" [attr.data-plan]="tier.plan" [attr.aria-labelledby]="'tier-' + tier.plan">
+        <div class="tier-head">
+          <h3 [id]="'tier-' + tier.plan">{{ labels[tier.plan] }}</h3>
+          @if (isCurrent(tier.plan)) {
+            <span class="tag">Current plan</span>
+          }
+        </div>
+        <p class="tagline">{{ tier.tagline }}</p>
+
+        @if (tier.plan === 'free') {
+          <p class="price"><span class="price-loading">No subscription needed</span></p>
+        } @else if (offersState() !== 'unavailable') {
+          <p class="price" [attr.aria-busy]="offersState() === 'loading'">
+            @switch (offersState()) {
+              @case ('loading') { <span class="price-loading">Loading price…</span> }
+              @case ('ready') {
+                @if (offer) {
+                  {{ offer.priceString }}@if (offer.period) {<span class="price-period"> / {{ offer.period }}</span>}
+                } @else {
+                  <span class="price-loading">Not available right now</span>
+                }
+              }
+              @default { <span class="price-loading">—</span> }
+            }
+          </p>
+        }
+
+        <ul class="perks">
+          @for (perk of tier.perks; track perk) {
+            <li>{{ perk }}</li>
+          }
+        </ul>
+
+        @if (tier.plan !== 'free' && offersState() !== 'unavailable') {
+          @if (isIncluded(tier.plan)) {
+            <p class="included">{{ isCurrent(tier.plan) ? 'Active' : 'Included in your plan' }}</p>
+          } @else {
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="!offer || busy() !== null"
+              [attr.aria-busy]="busy() === tier.plan"
+              (click)="offer && subscribe(offer)"
+            >
+              {{ busy() === tier.plan ? 'Opening store…' : 'Subscribe to ' + labels[tier.plan] }}
+            </button>
+          }
+        }
+      </section>
+    }
+
+    @if (offersState() !== 'unavailable') {
+      <div class="footer">
+        <button type="button" class="link-button" [disabled]="!canRestore()" (click)="restore()">
+          {{ busy() === 'restore' ? 'Restoring…' : 'Restore purchases' }}
+        </button>
+        <p class="fine-print">Monthly subscriptions. Prices are shown in your store's currency. Cancel anytime from your store account.</p>
+      </div>
+    }
+  </div>
+</ion-content>

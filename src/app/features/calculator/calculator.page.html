@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="brand">
+      <span class="logo" role="img" aria-label="ALGEXYZ">
+        <span class="logo-alg" aria-hidden="true">ALG</span><span aria-hidden="true">E</span><span class="logo-xyz" aria-hidden="true">XYZ</span>
+      </span>
+      <span class="screen-title">Calculator</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="algexyz-page">
+  <div class="page">
+    <div class="bases" role="radiogroup" aria-label="Number base">
+      @for (system of systems; track system.id) {
+        @let unlocked = isUnlocked(system.id);
+        <button
+          type="button"
+          role="radio"
+          class="base"
+          [class.base-selected]="system.id === systemId()"
+          [class.base-locked]="!unlocked"
+          [attr.aria-checked]="system.id === systemId()"
+          [attr.aria-label]="system.name + ', base ' + system.base + (unlocked ? '' : ', requires ' + requiredPlanLabel(system.id))"
+          (click)="selectBase(system.id)"
+        >
+          @if (!unlocked) {
+            <svg class="base-lock" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          }
+          {{ system.shortLabel }}
+        </button>
+      }
+    </div>
+
+    <section class="display" [class.display-error]="errorMessage() !== null" aria-label="Calculator display">
+      <div class="display-readout" aria-live="polite" aria-atomic="true">
+        <p class="display-expression">{{ expressionPreview() }}</p>
+        @if (errorMessage(); as message) {
+          <p class="display-message">{{ message }}</p>
+        } @else {
+          <p class="display-value">{{ entry() }}<sub>{{ system().base }}</sub></p>
+        }
+      </div>
+      <div class="display-footer">
+        <button
+          type="button"
+          class="link-button"
+          [disabled]="!canOpenInConverter()"
+          (click)="openInConverter()"
+        >
+          See step-by-step conversion
+        </button>
+        <span class="display-alternate">{{ alternate() }}</span>
+      </div>
+    </section>
+
+    <div class="keypad">
+      @for (key of keys; track key.label) {
+        <button
+          type="button"
+          class="key"
+          [class.key-digit]="key.kind === 'digit'"
+          [class.key-operator]="key.kind === 'operator'"
+          [class.key-action]="key.kind === 'clear' || key.kind === 'backspace'"
+          [class.key-equals]="key.kind === 'equals'"
+          [class.key-wide]="key.kind === 'clear'"
+          [class.key-zero]="key.label === '0'"
+          [class.key-active]="isHighlighted(key)"
+          [disabled]="isDisabled(key)"
+          [attr.aria-label]="key.kind === 'digit' ? null : key.ariaLabel"
+          [attr.aria-pressed]="key.kind === 'operator' ? isHighlighted(key) : null"
+          (click)="press(key)"
+        >
+          {{ key.label }}
+        </button>
+      }
+    </div>
+  </div>
+</ion-content>

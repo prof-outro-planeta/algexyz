@@ -1,0 +1,134 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--algexyz-space-3);
+  font-family: var(--algexyz-font-body);
+  color: var(--algexyz-color-fg);
+}
+
+h4 {
+  margin: 0;
+  font-family: var(--algexyz-font-heading);
+  font-weight: 800;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.mono {
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--algexyz-color-surface);
+  border: var(--algexyz-border-width) solid var(--algexyz-color-fg);
+  border-radius: var(--algexyz-radius);
+  box-shadow: var(--algexyz-shadow-card);
+}
+
+.step {
+  gap: 10px;
+  padding: var(--algexyz-space-3);
+}
+
+.steps-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--algexyz-color-fg-muted);
+}
+
+.step-kicker {
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--algexyz-color-accent-text);
+}
+
+.step-desc {
+  margin: var(--algexyz-space-1) 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--algexyz-color-fg-muted);
+}
+
+.numeral-line,
+.result-line {
+  margin: 0;
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+  line-height: 1.2;
+  word-break: break-all;
+
+  sub {
+    font-size: 13px;
+    color: var(--algexyz-color-fg-subtle);
+  }
+}
+
+.numeral-line {
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+
+.result-line {
+  font-size: 26px;
+}
+
+.result-line-value {
+  color: var(--algexyz-color-accent-text);
+}
+
+.bit-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bit-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: var(--algexyz-touch-target);
+  padding: 6px var(--algexyz-space-2);
+  border: var(--algexyz-border-width-thin) solid var(--algexyz-color-fg);
+
+  svg {
+    color: var(--algexyz-color-fg-subtle);
+  }
+}
+
+.bit-group-bits {
+  font-family: var(--algexyz-font-mono);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
+
+.bit-group-digit {
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  color: var(--algexyz-color-accent-text);
+}
+
+.bit-group-note {
+  font-size: 10px;
+  color: var(--algexyz-color-fg-subtle);
+}
+
+.step-joined {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--algexyz-color-accent-text);
+  word-break: break-all;
+}

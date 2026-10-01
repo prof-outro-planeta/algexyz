@@ -1,0 +1,195 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="brand">
+      <span class="logo" role="img" aria-label="ALGEXYZ">
+        <span class="logo-alg" aria-hidden="true">ALG</span><span aria-hidden="true">E</span><span class="logo-xyz" aria-hidden="true">XYZ</span>
+      </span>
+      <span class="screen-title">Practice</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="algexyz-page">
+  <div #page class="page">
+    <section class="progress" aria-labelledby="progress-label">
+      <div class="progress-head">
+        <span id="progress-label" class="kicker">Practice today</span>
+        @if (unlimited()) {
+          <span class="progress-count mono">{{ completed() }} · Unlimited</span>
+        } @else {
+          <span class="progress-count mono">{{ completed() }} / {{ limit() }}</span>
+        }
+      </div>
+      @if (!unlimited()) {
+        <div
+          class="progress-bar"
+          role="progressbar"
+          aria-labelledby="progress-label"
+          [attr.aria-valuenow]="completed()"
+          aria-valuemin="0"
+          [attr.aria-valuemax]="limit()"
+          [attr.aria-valuetext]="completed() + ' of ' + limit() + ' activities'"
+        >
+          @for (slot of progressSlots(); track slot) {
+            <span class="progress-slot" [class.progress-slot-done]="slot < completed()"></span>
+          }
+        </div>
+      }
+    </section>
+
+    @switch (phase()) {
+      @case ('locked') {
+        <section class="card locked" aria-labelledby="locked-title">
+          <svg class="locked-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <h3 id="locked-title">Daily practice complete</h3>
+          @if (plan() === 'free') {
+            <p class="body-text">You've completed today's {{ limit() }} free activities.</p>
+            <button type="button" class="btn btn-primary" (click)="openPaywall()">Go Pro</button>
+          } @else {
+            <p class="body-text">You've completed today's {{ limit() }} {{ planLabel() }} activities.</p>
+            <button type="button" class="btn btn-primary" (click)="openPaywall()">Go Premium</button>
+          }
+          <p class="hint">Or come back tomorrow for more.</p>
+        </section>
+      }
+
+      @case ('loading') {
+        <p class="hint" role="status">Loading practice…</p>
+      }
+
+      @default {
+        @let q = question();
+        @let r = result();
+
+        <section class="card question" aria-labelledby="question-title">
+          <div class="card-head">
+            <span class="kicker">{{ q.type === 'direct' ? 'Convert' : 'Choose' }}</span>
+            <span class="question-route mono">{{ source().shortLabel }} → {{ target().shortLabel }}</span>
+          </div>
+          <h3 id="question-title" class="question-title">
+            @if (q.type === 'direct') {
+              Write this number in {{ target().name.toLowerCase() }}
+            } @else {
+              Which {{ target().name.toLowerCase() }} number is equal?
+            }
+          </h3>
+          <p class="question-numeral mono" [attr.aria-label]="q.numeral + ' in base ' + source().base + ', to base ' + target().base">
+            {{ q.numeral }}<sub>{{ source().base }}</sub>
+            <span class="question-arrow" aria-hidden="true">→</span>
+            ?<sub>{{ target().base }}</sub>
+          </p>
+
+          @if (q.type === 'direct') {
+            <form class="answer-form" (submit)="$event.preventDefault(); submit()">
+              <label class="kicker" for="practice-answer">Your answer · base {{ target().base }}</label>
+              <input
+                id="practice-answer"
+                class="answer-input mono"
+                type="text"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="characters"
+                spellcheck="false"
+                enterkeyhint="done"
+                [attr.inputmode]="inputMode()"
+                [value]="answer()"
+                [readOnly]="phase() !== 'question'"
+                [attr.aria-invalid]="answerInvalidDigits().length > 0"
+                aria-describedby="practice-answer-hint"
+                (input)="onAnswerInput($event)"
+                (keydown.enter)="$event.preventDefault(); submit()"
+              />
+              <p id="practice-answer-hint" class="hint" [class.hint-error]="answerInvalidDigits().length > 0" aria-live="polite">
+                @if (answerInvalidDigits().length > 0) {
+                  <span class="hint-marker" aria-hidden="true">!</span>
+                  {{ answerInvalidDigits().join(', ') }} not in base {{ target().base }}. Valid: <span class="mono">{{ validDigitsLabel() }}</span>
+                } @else {
+                  Valid digits: <span class="mono">{{ validDigitsLabel() }}</span>
+                }
+              </p>
+              @if (phase() === 'question') {
+                <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">Submit</button>
+              }
+            </form>
+          } @else {
+            <div class="choices" role="group" aria-labelledby="question-title">
+              @for (choice of q.choices; track choice) {
+                <button
+                  type="button"
+                  class="choice mono"
+                  [class.choice-correct]="isCorrectChoice(choice)"
+                  [class.choice-wrong]="isWrongPick(choice)"
+                  [attr.aria-disabled]="phase() !== 'question'"
+                  [attr.aria-label]="choice + ' base ' + target().base + (isCorrectChoice(choice) ? ', correct answer' : '') + (isWrongPick(choice) ? ', your answer' : '')"
+                  (click)="choose(choice)"
+                >
+                  <span>{{ choice }}<sub>{{ target().base }}</sub></span>
+                  @if (isCorrectChoice(choice)) {
+                    <span class="choice-tag" aria-hidden="true">✓ Correct</span>
+                  } @else if (isWrongPick(choice)) {
+                    <span class="choice-tag" aria-hidden="true">✕ Yours</span>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </section>
+
+        <div class="feedback-region" aria-live="polite">
+          @if (r) {
+            <section #feedback class="card feedback" [class.feedback-correct]="r.correct" [class.feedback-incorrect]="!r.correct" aria-labelledby="feedback-title">
+              <div class="feedback-head">
+                <span class="feedback-icon" aria-hidden="true">
+                  @if (r.correct) {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                  } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                  }
+                </span>
+                <h3 id="feedback-title">{{ r.correct ? 'Correct!' : 'Not quite.' }}</h3>
+              </div>
+
+              @if (!r.correct) {
+                <dl class="feedback-answers">
+                  <div><dt>Your answer</dt><dd class="mono">{{ r.normalizedUserAnswer }}</dd></div>
+                  <div><dt>Correct answer</dt><dd class="mono">{{ r.expectedAnswer }}</dd></div>
+                </dl>
+              }
+
+              <p class="feedback-equation mono">
+                {{ q.numeral }}<sub>{{ source().base }}</sub> = <span class="feedback-value">{{ r.expectedAnswer }}</span><sub>{{ target().base }}</sub>
+              </p>
+
+              <div class="feedback-actions">
+                <button
+                  type="button"
+                  class="btn"
+                  aria-controls="practice-explanation"
+                  [attr.aria-expanded]="explanationOpen()"
+                  (click)="toggleExplanation()"
+                >
+                  {{ explanationOpen() ? 'Hide explanation' : 'See explanation' }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="next()">
+                  {{ limitReached() ? 'Finish' : 'Next question' }}
+                </button>
+              </div>
+            </section>
+          }
+        </div>
+
+        @if (r && explanationOpen()) {
+          <section id="practice-explanation" class="explanation" aria-label="Explanation">
+            <app-conversion-steps
+              [explanation]="explanation()"
+              [numeral]="q.numeral"
+              [fromBase]="source().base"
+              [toBase]="target().base"
+              [result]="q.expectedAnswer"
+            />
+          </section>
+        }
+      }
+    }
+  </div>
+</ion-content>

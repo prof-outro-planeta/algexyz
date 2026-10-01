@@ -1,0 +1,62 @@
+// For information on how to create your own theme, please refer to:
+// https://ionicframework.com/docs/theming/
+
+// ALGEXYZ design tokens (dark palette from design-reference "Algexyz v2").
+:root {
+  --algexyz-color-bg: #161616;
+  --algexyz-color-surface: #222120;
+  --algexyz-color-fg: #e8d8c9;
+  --algexyz-color-fg-muted: #c6baae;
+  --algexyz-color-fg-subtle: #857d75;
+  --algexyz-color-line-soft: #34312e;
+  --algexyz-color-accent: #f3701e;
+  --algexyz-color-accent-text: #f7a06a;
+  --algexyz-color-accent-ink: #1a1a1a;
+  --algexyz-color-info: #6b83a6;
+  --algexyz-color-shade: #4b607f;
+  --algexyz-color-on-navy: #f5ece2;
+
+  --algexyz-border-width: 2.5px;
+  --algexyz-border-width-thin: 2px;
+  --algexyz-radius: 0;
+  --algexyz-shadow-card: 5px 5px 0 var(--algexyz-color-shade);
+  --algexyz-shadow-button: 3px 3px 0 var(--algexyz-color-shade);
+  --algexyz-press-offset: 3px;
+  --algexyz-focus-ring: 3px solid var(--algexyz-color-accent);
+
+  --algexyz-font-heading: 'Archivo', system-ui, sans-serif;
+  --algexyz-font-body: 'Archivo', system-ui, sans-serif;
+  --algexyz-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --algexyz-space-1: 4px;
+  --algexyz-space-2: 8px;
+  --algexyz-space-3: 14px;
+  --algexyz-space-4: 16px;
+  --algexyz-space-5: 20px;
+  --algexyz-space-6: 24px;
+
+  // Gutter between the tab shell (header / tab bar) and page content.
+  // Safe areas are already absorbed by ion-header and ion-tab-bar.
+  --algexyz-page-inset-top: var(--algexyz-space-5);
+  --algexyz-page-inset-bottom: var(--algexyz-space-6);
+  --algexyz-page-inset-x: var(--algexyz-space-4);
+
+  --algexyz-touch-target: 44px;
+}
+
+// Same specificity as the `:root.ios` / `:root.md` rules in Ionic's dark palette, so these win.
+:root,
+:root.ios,
+:root.md {
+  --ion-font-family: var(--algexyz-font-body);
+  --ion-background-color: var(--algexyz-color-bg);
+  --ion-text-color: var(--algexyz-color-fg);
+  --ion-toolbar-background: var(--algexyz-color-bg);
+  --ion-toolbar-color: var(--algexyz-color-fg);
+  --ion-toolbar-border-color: var(--algexyz-color-fg);
+  --ion-tab-bar-background: var(--algexyz-color-bg);
+  --ion-tab-bar-color: var(--algexyz-color-fg-muted);
+  --ion-tab-bar-color-selected: var(--algexyz-color-accent);
+  --ion-tab-bar-border-color: var(--algexyz-color-fg);
+  --ion-border-color: var(--algexyz-color-fg);
+}

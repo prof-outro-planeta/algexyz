@@ -1,0 +1,52 @@
+@if (explanation(); as explanation) {
+  @switch (explanation.strategy) {
+    @case ('bit-grouping') {
+      <article class="card step">
+        <div>
+          <div class="step-kicker">Step 1</div>
+          <h4>Group the bits in {{ explanation.groupSize }}s</h4>
+          <p class="step-desc">
+            Since {{ explanation.output.base }} = 2<sup>{{ explanation.groupSize }}</sup>, each group of
+            {{ explanation.groupSize }} bits, counted from the right, becomes one digit. Pad with zeros on the left.
+          </p>
+        </div>
+
+        <p class="numeral-line">{{ explanation.input.numeral }}<sub>{{ explanation.input.base }}</sub></p>
+
+        <ol class="bit-groups" aria-label="Bit groups">
+          @for (group of explanation.groups; track $index) {
+            <li class="bit-group">
+              <span class="bit-group-bits">{{ group.bits }}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+              <span class="bit-group-digit">{{ group.digit }}</span>
+              <span class="bit-group-note">= {{ group.value }}</span>
+            </li>
+          }
+        </ol>
+
+        <p class="step-joined">Joined: <span class="mono">{{ explanation.output.numeral }}</span></p>
+      </article>
+    }
+  }
+} @else {
+  <p class="steps-empty">Step-by-step for this pair is coming soon.</p>
+}
+
+<article class="card step">
+  <div>
+    <div class="step-kicker">{{ explanation() ? 'Step 2' : 'Result' }}</div>
+    <h4>Result</h4>
+  </div>
+  <p class="result-line">
+    {{ numeral() }}<sub>{{ fromBase() }}</sub>
+    =
+    <span class="result-line-value">{{ result() }}</span><sub>{{ toBase() }}</sub>
+  </p>
+  <p class="step-desc">
+    @if (fromBase() === toBase()) {
+      Source and target are the same base; the number doesn't change.
+    } @else {
+      The same value, written in another base.
+    }
+  </p>
+</article>

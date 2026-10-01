@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="brand">
+      <span class="logo" role="img" aria-label="ALGEXYZ">
+        <span class="logo-alg" aria-hidden="true">ALG</span><span aria-hidden="true">E</span><span class="logo-xyz" aria-hidden="true">XYZ</span>
+      </span>
+      <span class="screen-title">Converter</span>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="algexyz-page">
+  <div class="page">
+    <section class="card" [class.card-invalid]="validation().status === 'invalid'">
+      <div class="card-head">
+        <label class="kicker" for="numeral-input">From</label>
+        <button
+          type="button"
+          class="btn btn-picker"
+          aria-haspopup="dialog"
+          [attr.aria-label]="'Source base: ' + source().name + ', base ' + source().base"
+          (click)="openPicker('from')"
+        >
+          <span>{{ source().shortLabel }}</span>
+          <span class="picker-base">base {{ source().base }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+        </button>
+      </div>
+
+      <input
+        id="numeral-input"
+        class="numeral numeral-input"
+        type="text"
+        placeholder="Enter a number"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        [value]="input()"
+        [attr.inputmode]="inputMode()"
+        [attr.aria-invalid]="validation().status === 'invalid'"
+        aria-describedby="numeral-hint"
+        (input)="onInput($event)"
+      />
+
+      <p id="numeral-hint" class="hint" [class.hint-error]="invalidMessage() !== null" aria-live="polite">
+        @if (invalidMessage(); as message) {
+          <span class="hint-marker" aria-hidden="true">!</span>
+          {{ message }} Valid: <span class="mono">{{ validDigitsLabel() }}</span>
+        } @else {
+          Valid digits: <span class="mono">{{ validDigitsLabel() }}</span>
+        }
+      </p>
+    </section>
+
+    <div class="swap-row">
+      <button type="button" class="btn btn-icon" aria-label="Swap bases" (click)="swap()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 16-4 4-4-4"></path><path d="M17 20V4"></path><path d="m3 8 4-4 4 4"></path><path d="M7 4v16"></path></svg>
+      </button>
+    </div>
+
+    <section class="card card-target">
+      <div class="card-head">
+        <span id="target-label" class="kicker">To</span>
+        <button
+          type="button"
+          class="btn btn-picker"
+          aria-haspopup="dialog"
+          [attr.aria-label]="'Target base: ' + target().name + ', base ' + target().base"
+          (click)="openPicker('to')"
+        >
+          <span>{{ target().shortLabel }}</span>
+          <span class="picker-base">base {{ target().base }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+        </button>
+      </div>
+      <output class="numeral numeral-result" for="numeral-input" aria-labelledby="target-label" aria-live="polite">{{ result() ?? '—' }}</output>
+    </section>
+
+    <section class="steps" aria-labelledby="steps-title">
+      <div class="steps-head">
+        <h3 id="steps-title">Step by step</h3>
+        @if (explanation(); as explanation) {
+          @switch (explanation.strategy) {
+            @case ('bit-grouping') {
+              <span class="steps-method">Bit-grouping shortcut</span>
+            }
+          }
+        }
+      </div>
+
+      @if (result(); as result) {
+        <app-conversion-steps
+          [explanation]="explanation()"
+          [numeral]="normalizedInput()"
+          [fromBase]="source().base"
+          [toBase]="target().base"
+          [result]="result"
+        />
+      } @else if (validation().status === 'invalid') {
+        <p class="steps-empty">Fix the number to see the steps.</p>
+      } @else {
+        <p class="steps-empty">Enter a number to see the steps.</p>
+      }
+    </section>
+  </div>
+
+  <ion-modal
+    class="base-sheet"
+    [isOpen]="picker() !== null"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
+    (didDismiss)="onPickerDismissed()"
+  >
+    <ng-template>
+      <div class="sheet">
+        <div class="sheet-head">
+          <h4>{{ pickerTitle() }}</h4>
+          <button type="button" class="icon-button" aria-label="Close" (click)="closePicker()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          </button>
+        </div>
+        <ul class="sheet-list">
+          @for (system of systems; track system.id) {
+            <li>
+              @let unlocked = isUnlocked(system.id);
+              <button
+                type="button"
+                class="sheet-option"
+                [class.sheet-option-selected]="system.id === pickedId()"
+                [class.sheet-option-locked]="!unlocked"
+                [attr.aria-pressed]="system.id === pickedId()"
+                [attr.aria-label]="unlocked ? null : system.name + ', requires ' + requiredPlanLabel(system.id)"
+                (click)="pick(system.id)"
+              >
+                <span class="sheet-code">{{ system.shortLabel }}</span>
+                <span class="sheet-name">{{ system.name }}</span>
+                @if (unlocked) {
+                  <span class="sheet-digits">{{ system.digits }}</span>
+                  <span class="sheet-check" aria-hidden="true">
+                    @if (system.id === pickedId()) {
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                    }
+                  </span>
+                } @else {
+                  <span class="sheet-lock" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    {{ requiredPlanLabel(system.id) }}
+                  </span>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>
