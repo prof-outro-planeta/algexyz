@@ -51,76 +51,76 @@
         </p>
       </article>
     }
-    @case ('positional-expansion') {
-      @let base = explanation.input.base;
-      @let contributions = nonZeroContributions(explanation.terms);
+    @case ('bit-expansion') {
       <article class="card step">
         <div>
           <div class="step-kicker">Step 1</div>
-          <h4>Weigh each digit by its place</h4>
+          <h4>Write each digit as {{ explanation.groupSize }} bits</h4>
           <p class="step-desc">
-            Each position is worth a power of {{ base }}, starting at {{ base }}<sup>0</sup> on the right.
-            Multiply every digit by the value above it, then add everything up.
+            Since {{ explanation.input.base }} = 2<sup>{{ explanation.groupSize }}</sup>, every digit becomes exactly
+            {{ explanation.groupSize }} bits. Join them and drop the zeros on the left.
           </p>
         </div>
 
-        <ol class="places" aria-label="Place values">
-          @for (term of explanation.terms; track $index) {
-            <li class="place" [class.place-zero]="term.digitValue === 0">
-              <span class="place-value">{{ term.placeValue }}</span>
-              <span class="place-digit">{{ term.digit }}</span>
-              <span class="place-power">{{ base }}<sup>{{ term.exponent }}</sup></span>
+        <ol class="bit-groups" aria-label="Digits as bits">
+          @for (digit of explanation.digits; track $index) {
+            <li class="bit-group" [class.group-alt]="$odd">
+              <span class="bit-group-digit">{{ digit.digit }}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+              <span class="bit-group-bits">{{ digit.bits }}</span>
+              <span class="bit-group-note">= {{ digit.value }}</span>
             </li>
           }
         </ol>
 
-        <div class="expansion mono">
-          <p class="expansion-line">
-            @if (explanation.negative) {
-              <span>−(</span>
+        <p class="step-joined">
+          Joined:
+          <span class="mono joined-bits">
+            @if (explanation.output.numeral.startsWith('-')) {
+              <span>-</span>
             }
-            @for (term of explanation.terms; track $index) {
-              @if (!$first) {
-                <span class="expansion-op">+</span>
-              }
-              <span class="expansion-term" [class.place-zero]="term.digitValue === 0">{{ term.digitValue }}·{{ base }}<sup>{{ term.exponent }}</sup></span>
-            }
-            @if (explanation.negative) {
-              <span>)</span>
-            }
-          </p>
-          @if (contributions.length > 1) {
-            <p class="expansion-line">
-              <span class="expansion-op">=</span>
-              @if (explanation.negative) {
-                <span>−(</span>
-              }
-              @for (value of contributions; track $index) {
-                @if (!$first) {
-                  <span class="expansion-op">+</span>
+            @for (digit of explanation.digits; track $index) {
+              <span class="joined-digit" [class.group-alt]="$odd">
+                @if ($first && explanation.trimmed > 0) {
+                  <span class="bit-pad">{{ digit.bits.slice(0, explanation.trimmed) }}</span>{{ digit.bits.slice(explanation.trimmed) }}
+                } @else {
+                  {{ digit.bits }}
                 }
-                <span class="expansion-term">{{ value }}</span>
-              }
-              @if (explanation.negative) {
-                <span>)</span>
-              }
-            </p>
-          }
-          <p class="expansion-line expansion-total">
-            <span class="expansion-op">=</span>
-            <span>{{ explanation.output.numeral }}</span>
-          </p>
-        </div>
+              </span>
+            }
+          </span>
+        </p>
       </article>
     }
+    @case ('positional-expansion') {
+      <ng-container *ngTemplateOutlet="positionalStep; context: { $implicit: explanation, step: 1 }" />
+    }
+    @case ('repeated-division') {
+      <ng-container *ngTemplateOutlet="divisionStep; context: { $implicit: explanation, step: 1 }" />
+    }
+    @case ('via-decimal') {
+      <p class="steps-route">
+        There is no direct shortcut from base {{ explanation.input.base }} to base {{ explanation.output.base }},
+        so go through base 10:
+        <span class="mono route-line">
+          {{ explanation.input.numeral }}<sub>{{ explanation.input.base }}</sub>
+          →
+          {{ explanation.toDecimal.output.numeral }}<sub>10</sub>
+          →
+          {{ explanation.output.numeral }}<sub>{{ explanation.output.base }}</sub>
+        </span>
+      </p>
+      <ng-container *ngTemplateOutlet="positionalStep; context: { $implicit: explanation.toDecimal, step: 1 }" />
+      <ng-container *ngTemplateOutlet="divisionStep; context: { $implicit: explanation.fromDecimal, step: 2 }" />
+    }
   }
-} @else {
+} @else if (fromBase() !== toBase()) {
   <p class="steps-empty">Step-by-step for this pair is coming soon.</p>
 }
 
 <article class="card step">
   <div>
-    <div class="step-kicker">{{ explanation() ? 'Step 2' : 'Result' }}</div>
+    <div class="step-kicker">{{ resultKicker(explanation()) }}</div>
     <h4>Result</h4>
   </div>
   <p class="result-line">
@@ -136,3 +136,108 @@
     }
   </p>
 </article>
+
+<ng-template #positionalStep let-explanation let-step="step">
+  @let base = explanation.input.base;
+  @let contributions = nonZeroContributions(explanation.terms);
+  <article class="card step">
+    <div>
+      <div class="step-kicker">Step {{ step }}</div>
+      <h4>Weigh each digit by its place</h4>
+      <p class="step-desc">
+        Each position is worth a power of {{ base }}, starting at {{ base }}<sup>0</sup> on the right.
+        Multiply every digit by the value above it, then add everything up.
+      </p>
+    </div>
+
+    <ol class="places" aria-label="Place values">
+      @for (term of explanation.terms; track $index) {
+        <li class="place" [class.place-zero]="term.digitValue === 0">
+          <span class="place-value">{{ term.placeValue }}</span>
+          <span class="place-digit">{{ term.digit }}</span>
+          <span class="place-power">{{ base }}<sup>{{ term.exponent }}</sup></span>
+        </li>
+      }
+    </ol>
+
+    <div class="expansion mono">
+      <p class="expansion-line">
+        @if (explanation.negative) {
+          <span>−(</span>
+        }
+        @for (term of explanation.terms; track $index) {
+          @if (!$first) {
+            <span class="expansion-op">+</span>
+          }
+          <span class="expansion-term" [class.place-zero]="term.digitValue === 0">{{ term.digitValue }}·{{ base }}<sup>{{ term.exponent }}</sup></span>
+        }
+        @if (explanation.negative) {
+          <span>)</span>
+        }
+      </p>
+      @if (contributions.length > 1) {
+        <p class="expansion-line">
+          <span class="expansion-op">=</span>
+          @if (explanation.negative) {
+            <span>−(</span>
+          }
+          @for (value of contributions; track $index) {
+            @if (!$first) {
+              <span class="expansion-op">+</span>
+            }
+            <span class="expansion-term">{{ value }}</span>
+          }
+          @if (explanation.negative) {
+            <span>)</span>
+          }
+        </p>
+      }
+      <p class="expansion-line expansion-total">
+        <span class="expansion-op">=</span>
+        <span>{{ explanation.output.numeral }}</span>
+      </p>
+    </div>
+  </article>
+</ng-template>
+
+<ng-template #divisionStep let-explanation let-step="step">
+  @let base = explanation.output.base;
+  <article class="card step">
+    <div>
+      <div class="step-kicker">Step {{ step }}</div>
+      <h4>Divide by {{ base }} repeatedly</h4>
+      <p class="step-desc">
+        Divide by {{ base }} and keep dividing each quotient until it reaches 0. Every remainder is one digit,
+        and the last remainder is the leftmost digit.
+        @if (explanation.negative) {
+          Work with {{ explanation.steps[0].dividend }} and put the minus sign back at the end.
+        }
+      </p>
+    </div>
+
+    <div class="divisions-wrap">
+      <ol class="divisions" aria-label="Divisions">
+        @for (division of explanation.steps; track $index) {
+          <li class="division">
+            <span class="division-expr mono">{{ division.dividend }} ÷ {{ base }} = {{ division.quotient }}</span>
+            <span class="division-remainder mono">
+              r {{ division.remainder }}
+              @if (division.remainder >= 10) {
+                <span class="division-digit">→ {{ division.digit }}</span>
+              }
+            </span>
+          </li>
+        }
+      </ol>
+      <div class="read-up" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path></svg>
+        <span class="read-up-line"></span>
+      </div>
+    </div>
+
+    <p class="step-joined">
+      Read the remainders bottom to top:
+      <span class="mono">{{ explanation.output.numeral }}</span>
+    </p>
+  </article>
+</ng-template>

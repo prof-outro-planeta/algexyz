@@ -1,9 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { ConversionExplanation, PlaceValueTerm } from '../../domain/explanation';
 
 /** Renders a structured conversion explanation followed by the result line. */
 @Component({
   selector: 'app-conversion-steps',
+  imports: [NgTemplateOutlet],
   templateUrl: 'conversion-steps.component.html',
   styleUrls: ['conversion-steps.component.scss'],
 })
@@ -16,5 +18,12 @@ export class ConversionStepsComponent {
 
   nonZeroContributions(terms: readonly PlaceValueTerm[]): readonly bigint[] {
     return terms.filter((term) => term.contribution !== 0n).map((term) => term.contribution);
+  }
+
+  resultKicker(explanation: ConversionExplanation | null): string {
+    if (!explanation) {
+      return 'Result';
+    }
+    return explanation.strategy === 'via-decimal' ? 'Step 3' : 'Step 2';
   }
 }

@@ -54,7 +54,7 @@ describe('ConverterPage', () => {
 
     const explanation = component.explanation();
     expect(explanation?.strategy).toBe('bit-grouping');
-    expect(explanation?.groups).toHaveLength(2);
+    expect(explanation?.strategy === 'bit-grouping' && explanation.groups).toHaveLength(2);
   });
 
   it('flags digits that do not exist in the source base without throwing', () => {
@@ -112,7 +112,7 @@ describe('ConverterPage', () => {
     expect(component.targetId()).toBe('decimal');
     expect(component.sourceId()).toBe('binary');
     expect(component.result()).toBe('214');
-    expect(component.explanation()).toBeNull();
+    expect(component.explanation()?.strategy).toBe('positional-expansion');
   });
 
   it('renders the bit groups from the domain explanation', () => {
@@ -128,6 +128,23 @@ describe('ConverterPage', () => {
     ]);
     expect(element.querySelector('.step-joined')?.textContent).toContain('Joined');
     expect(element.querySelector('.numeral-result')?.textContent?.trim()).toBe('D6');
+  });
+
+  it('renders the repeated divisions for decimal to hexadecimal', async () => {
+    component.openPicker('from');
+    component.pick('decimal');
+    component.input.set('214');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const element: HTMLElement = fixture.nativeElement;
+    const divisions = [...element.querySelectorAll('.division')].map((division) =>
+      division.textContent?.replace(/\s+/g, ' ').trim(),
+    );
+
+    expect(component.explanation()?.strategy).toBe('repeated-division');
+    expect(divisions).toEqual(['214 ÷ 16 = 13 r 6', '13 ÷ 16 = 0 r 13 → D']);
+    expect(element.querySelector('.steps-method')?.textContent?.trim()).toBe('Repeated division');
   });
 
   it('shows the inline error in the hint when the input is invalid', async () => {

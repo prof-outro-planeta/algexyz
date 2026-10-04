@@ -1,8 +1,17 @@
+import { bitExpansionStrategy } from './bit-expansion';
 import { bitGroupingStrategy } from './bit-grouping';
 import { ConversionExplanation, ExplanationStrategy } from './explanation';
 import { positionalExpansionStrategy } from './positional-expansion';
+import { repeatedDivisionStrategy } from './repeated-division';
+import { viaDecimalStrategy } from './via-decimal';
 
-const strategies: readonly ExplanationStrategy[] = [bitGroupingStrategy, positionalExpansionStrategy];
+const strategies: readonly ExplanationStrategy[] = [
+  bitGroupingStrategy,
+  bitExpansionStrategy,
+  positionalExpansionStrategy,
+  repeatedDivisionStrategy,
+  viaDecimalStrategy,
+];
 
 export function explainConversion(
   numeral: string,

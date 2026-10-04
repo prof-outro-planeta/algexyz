@@ -54,8 +54,11 @@ Everything runs locally: the math does not depend on the network, so the app wor
 
 | Conversion | Technique |
 |---|---|
-| Binary → hexadecimal | **Bit grouping:** bits are split into groups of 4, with alternating colors that link each group to its hexadecimal digit. Leading padding zeros are dimmed. |
+| Binary → octal or hexadecimal | **Bit grouping:** bits are split into groups of 3 or 4, with alternating colors that link each group to its digit. Leading padding zeros are dimmed. |
+| Octal or hexadecimal → binary | **Digit to bits:** each digit becomes 3 or 4 bits, then the bits are joined and the leading zeros dropped. |
 | Any base → decimal | **Place value:** each digit shows its place value above it (128, 64, 32… in binary), highlighted when it counts and dimmed when it is zero, followed by the sum. |
+| Decimal → any base | **Repeated division:** divide by the target base until the quotient reaches 0, then read the remainders from bottom to top. |
+| Other pairs (e.g. 16 → 8, 12 → 2) | **Via decimal:** place value to reach base 10, then repeated division to reach the target base. |
 
 Place value example:
 
@@ -174,7 +177,7 @@ Prices shown in the app come from RevenueCat, localized; no price is hardcoded.
 - [x] Daily practice with grading and explanations
 - [x] PRO and PREMIUM subscriptions with RevenueCat
 - [x] Step by step by bit grouping and by place value
-- [ ] Step by step from decimal to other bases (repeated division) and between non-decimal bases
+- [x] Step by step from decimal to other bases (repeated division) and between non-decimal bases
 - [ ] Fractions and two's complement (PRO)
 - [ ] Arbitrary bases from 2 to 36 in the UI (PREMIUM)
 - [ ] Google Play Store release

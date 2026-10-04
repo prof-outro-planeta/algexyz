@@ -54,8 +54,11 @@ Tudo roda localmente: a matemática não depende de rede, então o app funciona 
 
 | Conversão | Técnica |
 |---|---|
-| Binário → hexadecimal | **Agrupamento de bits:** os bits são separados em grupos de 4, com cores alternadas que ligam cada grupo ao dígito hexadecimal correspondente. Os zeros de preenchimento à esquerda aparecem esmaecidos. |
+| Binário → octal ou hexadecimal | **Agrupamento de bits:** os bits são separados em grupos de 3 ou 4, com cores alternadas que ligam cada grupo ao seu dígito. Os zeros de preenchimento à esquerda aparecem esmaecidos. |
+| Octal ou hexadecimal → binário | **Dígito para bits:** cada dígito vira 3 ou 4 bits; depois os bits são juntados e os zeros à esquerda descartados. |
 | Qualquer base → decimal | **Valor posicional:** cada algarismo mostra acima o valor da sua posição (128, 64, 32… no binário), destacado quando conta e esmaecido quando é zero, seguido da soma. |
+| Decimal → qualquer base | **Divisões sucessivas:** divide pela base de destino até o quociente chegar a 0 e lê os restos de baixo para cima. |
+| Demais pares (ex.: 16 → 8, 12 → 2) | **Via decimal:** valor posicional para chegar à base 10 e divisões sucessivas para chegar à base de destino. |
 
 Exemplo de valor posicional:
 
@@ -174,7 +177,7 @@ Os preços exibidos no app vêm do RevenueCat, localizados; nenhum preço está 
 - [x] Prática diária com correção e explicação
 - [x] Assinaturas PRO e PREMIUM com RevenueCat
 - [x] Passo a passo por agrupamento de bits e por valor posicional
-- [ ] Passo a passo de decimal para outras bases (divisões sucessivas) e entre bases não decimais
+- [x] Passo a passo de decimal para outras bases (divisões sucessivas) e entre bases não decimais
 - [ ] Frações e complemento de dois (PRO)
 - [ ] Bases arbitrárias de 2 a 36 na interface (PREMIUM)
 - [ ] Publicação na Google Play Store

@@ -50,12 +50,36 @@ describe('bit grouping explanation (binary to hexadecimal)', () => {
   });
 });
 
-describe('explainConversion', () => {
-  it('picks the bit grouping strategy for binary to hexadecimal', () => {
-    expect(explainConversion('11010110', 2, 16)?.strategy).toBe('bit-grouping');
+describe('bit grouping explanation (binary to octal)', () => {
+  it('explains 11010110 in base 2 as 326 in base 8 with groups of 3', () => {
+    const explanation = explainBitGrouping('11010110', 8);
+
+    expect(explanation.output).toEqual({ numeral: '326', base: 8 });
+    expect(explanation.groupSize).toBe(3);
+    expect(explanation.paddedBits).toBe('011010110');
+    expect(explanation.padding).toBe(1);
+    expect(explanation.groups).toEqual([
+      { bits: '011', value: 3, digit: '3' },
+      { bits: '010', value: 2, digit: '2' },
+      { bits: '110', value: 6, digit: '6' },
+    ]);
   });
 
-  it('returns null when no strategy covers the pair of bases', () => {
-    expect(explainConversion('10', 10, 2)).toBeNull();
+  it.each(['0', '1', '111', '1000', '-101', '1'.repeat(70)])('matches convert() for %s', (numeral) => {
+    expect(explainBitGrouping(numeral, 8).output.numeral).toBe(convert(numeral, 2, 8));
+  });
+
+  it('rejects bases without a bit shortcut', () => {
+    expect(() => explainBitGrouping('101', 12)).toThrow(RangeError);
+  });
+});
+
+describe('explainConversion', () => {
+  it.each([8, 16])('picks the bit grouping strategy for binary to base %i', (base) => {
+    expect(explainConversion('11010110', 2, base)?.strategy).toBe('bit-grouping');
+  });
+
+  it('returns null when source and target are the same base', () => {
+    expect(explainConversion('10', 2, 2)).toBeNull();
   });
 });

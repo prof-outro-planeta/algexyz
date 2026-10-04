@@ -34,10 +34,25 @@ h4 {
   padding: var(--algexyz-space-3);
 }
 
-.steps-empty {
+.steps-empty,
+.steps-route {
   margin: 0;
   font-size: 13px;
+  line-height: 1.45;
   color: var(--algexyz-color-fg-muted);
+}
+
+.route-line {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--algexyz-color-fg);
+  word-break: break-all;
+
+  sub {
+    font-size: 10px;
+    color: var(--algexyz-color-fg-subtle);
+  }
 }
 
 .step-kicker {
@@ -253,4 +268,63 @@ h4 {
   font-weight: 500;
   color: var(--algexyz-color-accent-text);
   word-break: break-all;
+}
+
+.joined-bits .joined-digit + .joined-digit {
+  margin-left: 0.3em;
+}
+
+.divisions-wrap {
+  display: flex;
+  gap: var(--algexyz-space-2);
+}
+
+.divisions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.division {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--algexyz-space-2);
+  padding: 4px var(--algexyz-space-2);
+  border: var(--algexyz-border-width-thin) solid var(--algexyz-color-line-soft);
+  font-size: 14px;
+}
+
+.division-expr {
+  min-width: 0;
+  word-break: break-all;
+}
+
+.division-remainder {
+  flex: none;
+  color: var(--algexyz-color-accent-text);
+}
+
+.division-digit {
+  margin-left: 2px;
+}
+
+// Remainders are read from the last division up to the first.
+.read-up {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--algexyz-color-accent-text);
+}
+
+.read-up-line {
+  flex: 1;
+  width: 2px;
+  margin-top: -3px;
+  background: currentColor;
 }
