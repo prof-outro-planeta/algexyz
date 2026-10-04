@@ -1,41 +1,83 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="src/assets/icon/icon-algexyz-dark.png" />
+  <img src="src/assets/icon/icon-algexyz.png" alt="ALGEXYZ" width="160" />
+</picture>
+
 # ALGEXYZ
 
 **Same value, different basis.**
 
-ALGEXYZ é um app mobile para aprender e trabalhar com sistemas numéricos. Ele converte, calcula e treina números em binário, octal, decimal, duodecimal e hexadecimal, sempre mostrando que o valor é o mesmo e só a base muda.
+Aprenda e trabalhe com sistemas numéricos: converta, calcule e pratique em binário, octal, decimal, duodecimal e hexadecimal.
 
-- Web: [algexyz-b8931.web.app](https://algexyz-b8931.web.app/)
-- Plataforma principal: Android (Capacitor)
+[![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)](https://angular.dev)
+[![Ionic](https://img.shields.io/badge/Ionic-9-3880FF?logo=ionic&logoColor=white)](https://ionicframework.com)
+[![Capacitor](https://img.shields.io/badge/Capacitor-8-119EFF?logo=capacitor&logoColor=white)](https://capacitorjs.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Firebase](https://img.shields.io/badge/Firebase-12-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
+[![RevenueCat](https://img.shields.io/badge/RevenueCat-13-F2545B)](https://www.revenuecat.com)
+[![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev)
 
-## Funcionalidades
+[![Android](https://img.shields.io/badge/plataforma-Android-3DDC84?logo=android&logoColor=white)](#-android)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-0.7.0-F3701E)](package.json)
+[![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-4B607F)](LICENSE)
+
+[**Abrir no navegador**](https://algexyz-b8931.web.app/) · [Funcionalidades](#-funcionalidades) · [Como rodar](#-como-rodar) · [Roadmap](#-roadmap)
+
+</div>
+
+---
+
+## Sumário
+
+- [Funcionalidades](#-funcionalidades)
+- [Explicações passo a passo](#-explicações-passo-a-passo)
+- [Planos](#-planos)
+- [Arquitetura](#-arquitetura)
+- [Como rodar](#-como-rodar)
+- [Roadmap](#-roadmap)
+- [Autor e licença](#-autor-e-licença)
+
+## ✨ Funcionalidades
 
 | Aba | O que faz |
 |---|---|
-| **Converter** | Converte números entre bases, valida os dígitos permitidos e explica passo a passo a conversão de binário para hexadecimal (agrupamento de bits). |
-| **Calculator** | Soma, subtrai, multiplica e divide inteiros na base escolhida, com precisão arbitrária (`bigint`). Uso ilimitado. |
-| **Practice** | Exercícios de conversão com resposta direta ou múltipla escolha, correção imediata e explicação. Tem limite diário de atividades conforme o plano. |
-| **Paywall** | Compara os planos e permite assinar e restaurar compras pelo RevenueCat. |
+| **Converter** | Converte números entre bases, valida os dígitos permitidos e mostra a conversão passo a passo. |
+| **Calculator** | Soma, subtrai, multiplica e divide inteiros na base escolhida, com precisão arbitrária (`bigint`). As teclas A–F mostram no canto o valor decimal (10–15). Uso ilimitado. |
+| **Practice** | Exercícios de conversão com resposta direta ou múltipla escolha, correção imediata e explicação, com limite diário conforme o plano. |
+| **Paywall** | Compara os planos e permite assinar e restaurar compras pelo RevenueCat. Abre pelo botão de plano no canto superior direito de cada aba. |
 
-### Planos
+Tudo roda localmente: a matemática não depende de rede, então o app funciona offline.
+
+## 🧮 Explicações passo a passo
+
+| Conversão | Técnica |
+|---|---|
+| Binário → hexadecimal | **Agrupamento de bits:** os bits são separados em grupos de 4, com cores alternadas que ligam cada grupo ao dígito hexadecimal correspondente. Os zeros de preenchimento à esquerda aparecem esmaecidos. |
+| Qualquer base → decimal | **Valor posicional:** cada algarismo mostra acima o valor da sua posição (128, 64, 32… no binário), destacado quando conta e esmaecido quando é zero, seguido da soma. |
+
+Exemplo de valor posicional:
+
+```
+11010110₂ = 1·2⁷ + 1·2⁶ + 0·2⁵ + 1·2⁴ + 0·2³ + 1·2² + 1·2¹ + 0·2⁰
+          = 128 + 64 + 16 + 4 + 2
+          = 214₁₀
+```
+
+As explicações são compartilhadas entre Converter e Practice e ficam em [`src/app/domain/explanation/`](src/app/domain/explanation).
+
+## 💎 Planos
 
 | | FREE | PRO | PREMIUM |
-|---|---|---|---|
+|---|:---:|:---:|:---:|
 | Bases | 2, 10, 16 | + 8 e 12 | 2 a 36 |
 | Prática por dia | 5 | 20 | Ilimitada |
 | Calculadora e conversor | ✓ | ✓ | ✓ |
 
-As bases bloqueadas continuam visíveis, com cadeado e o plano necessário; ao tocar nelas, o paywall abre. As regras dos planos ficam centralizadas em `src/app/core/subscription/capabilities.ts`.
+As bases bloqueadas continuam visíveis, com cadeado e o plano necessário; ao tocar nelas, o paywall abre. As regras ficam centralizadas em [`capabilities.ts`](src/app/core/subscription/capabilities.ts).
 
-## Stack
-
-- [Angular 22](https://angular.dev) com componentes standalone, Signals e modo zoneless
-- [Ionic 9](https://ionicframework.com)
-- [Capacitor 8](https://capacitorjs.com) para Android
-- [Firebase 12](https://firebase.google.com) para Hosting e Auth
-- [RevenueCat](https://www.revenuecat.com) (`@revenuecat/purchases-capacitor`) para assinaturas
-- [Vitest](https://vitest.dev) para testes
-
-## Arquitetura
+## 🏗️ Arquitetura
 
 ```
 src/app/
@@ -53,18 +95,16 @@ src/app/
 └── tabs/          Navegação por abas
 ```
 
-Princípios:
-
-- **Domínio isolado:** toda a matemática roda localmente e é testada sem framework. O app funciona offline.
+- **Domínio isolado:** toda a matemática é testada sem framework.
 - **Assinaturas desacopladas:** as telas consultam apenas `SubscriptionCapabilities`. A dependência segue esta ordem: telas → capacidades → `SubscriptionService` → `SubscriptionGateway` → adaptador RevenueCat → SDK. Só `revenuecat-subscription.gateway.ts` importa o SDK.
 - **Estado único de assinatura:** o plano vem sempre do `CustomerInfo` do RevenueCat e nunca é concedido manualmente.
 
-## Como rodar
+## 🚀 Como rodar
 
 ### Pré-requisitos
 
 - Node.js 20 ou superior
-- Ionic CLI (`npm install -g @ionic/cli`)
+- Ionic CLI: `npm install -g @ionic/cli`
 - Android Studio, para rodar no Android
 
 ### Instalação
@@ -90,9 +130,10 @@ Depois preencha:
 - **`revenueCat.apiKey`:** a chave pública do SDK. Use a do Test Store (`test_...`) em desenvolvimento e a do Google Play (`goog_...`) em produção. Nunca use uma chave secreta.
 - No `environment.prod.ts`, defina `production: true` e `debugLogs: false`.
 
-Sem a chave do RevenueCat, o app funciona normalmente no plano FREE.
+> [!NOTE]
+> Sem a chave do RevenueCat, o app funciona normalmente no plano FREE.
 
-### Navegador
+### 🌐 Navegador
 
 ```bash
 ionic serve
@@ -100,7 +141,7 @@ ionic serve
 
 As assinaturas só funcionam no app Android. No navegador, o paywall informa isso e o app fica no plano FREE.
 
-### Android
+### 🤖 Android
 
 ```bash
 ionic build
@@ -115,13 +156,19 @@ npx ng build --configuration development
 npx cap sync android
 ```
 
-### Testes
+> [!IMPORTANT]
+> As barras de status e de navegação do Android são tratadas pelo lado nativo. O `index.html` não usa `viewport-fit=cover`, então o plugin SystemBars do Capacitor encaixa a janela entre as barras e a página recebe área segura zero. Não adicione `viewport-fit=cover` nem espaçamentos com `env(safe-area-inset-*)`, ou o recuo será aplicado duas vezes.
+
+### 🧪 Testes
 
 ```bash
 npm test
 ```
 
-## Configuração do RevenueCat
+<details>
+<summary><strong>Configuração do RevenueCat</strong></summary>
+
+<br />
 
 No dashboard do RevenueCat:
 
@@ -131,17 +178,22 @@ No dashboard do RevenueCat:
 
 Os preços exibidos no app vêm do RevenueCat, localizados; nenhum preço está fixo no código.
 
-## Roadmap
+</details>
 
-- Explicações passo a passo para outros pares de bases
-- Frações e complemento de dois (PRO)
-- Bases arbitrárias de 2 a 36 na interface (PREMIUM)
-- Publicação na Google Play Store
+## 🗺️ Roadmap
 
-## Autor
+- [x] Conversor com validação de dígitos
+- [x] Calculadora em qualquer base disponível
+- [x] Prática diária com correção e explicação
+- [x] Assinaturas PRO e PREMIUM com RevenueCat
+- [x] Passo a passo por agrupamento de bits e por valor posicional
+- [ ] Passo a passo de decimal para outras bases (divisões sucessivas) e entre bases não decimais
+- [ ] Frações e complemento de dois (PRO)
+- [ ] Bases arbitrárias de 2 a 36 na interface (PREMIUM)
+- [ ] Publicação na Google Play Store
 
-Ítalo Marques Rodrigues Silva
+## 👤 Autor e licença
 
-## Licença
+Feito por **Ítalo Marques Rodrigues Silva**.
 
-[MIT](LICENSE)
+Distribuído sob a licença [MIT](LICENSE).
