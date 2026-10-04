@@ -6,9 +6,10 @@ const config: CapacitorConfig = {
   webDir: 'www',
   backgroundColor: '#161616',
   plugins: {
+    // Without viewport-fit=cover in index.html, SystemBars pads the native window around the
+    // status and navigation bars and reports zero safe-area insets to the web layer.
     SystemBars: {
       style: 'DARK',
-      initialViewportFitValueHint: 'cover',
     },
   },
 };

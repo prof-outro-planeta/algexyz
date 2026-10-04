@@ -1,7 +1,3 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
-
-// ALGEXYZ design tokens (dark palette from design-reference "Algexyz v2").
 :root {
   --algexyz-color-bg: #161616;
   --algexyz-color-surface: #222120;
@@ -35,8 +31,6 @@
   --algexyz-space-5: 20px;
   --algexyz-space-6: 24px;
 
-  // Gutter between the tab shell (header / tab bar) and page content.
-  // Safe areas are already absorbed by ion-header and ion-tab-bar.
   --algexyz-page-inset-top: var(--algexyz-space-5);
   --algexyz-page-inset-bottom: var(--algexyz-space-6);
   --algexyz-page-inset-x: var(--algexyz-space-4);
@@ -44,7 +38,6 @@
   --algexyz-touch-target: 44px;
 }
 
-// Same specificity as the `:root.ios` / `:root.md` rules in Ionic's dark palette, so these win.
 :root,
 :root.ios,
 :root.md {
