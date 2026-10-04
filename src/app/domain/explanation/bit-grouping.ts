@@ -32,6 +32,7 @@ export function explainBitGrouping(numeral: string): BitGroupingExplanation {
     output: { numeral: signed, base: TO_BASE },
     groupSize: GROUP_SIZE,
     paddedBits,
+    padding: paddedLength - bits.length,
     groups,
   };
 }

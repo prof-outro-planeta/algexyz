@@ -19,7 +19,12 @@ describe('bit grouping explanation (binary to hexadecimal)', () => {
     const explanation = explainBitGrouping('110');
 
     expect(explanation.paddedBits).toBe('0110');
+    expect(explanation.padding).toBe(1);
     expect(explanation.groups).toEqual([{ bits: '0110', value: 6, digit: '6' }]);
+  });
+
+  it('needs no padding when the bits already fill whole groups', () => {
+    expect(explainBitGrouping('11010110').padding).toBe(0);
   });
 
   it('drops leading zero groups', () => {
