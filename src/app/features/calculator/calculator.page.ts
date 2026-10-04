@@ -4,12 +4,13 @@ import { IonContent, IonHeader, IonToolbar } from '@ionic/angular';
 import { PLAN_LABELS, SubscriptionCapabilities } from '../../core/subscription';
 import { OPERATOR_SYMBOLS, Operator, applyOperator } from '../../domain/calculator';
 import { formatNumeral, parseNumeral } from '../../domain/conversion';
-import { NUMBER_SYSTEMS, NumberSystemId, getNumberSystem } from '../../domain/number-system';
+import { NUMBER_SYSTEMS, NumberSystemId, digitValue, getNumberSystem } from '../../domain/number-system';
+import { PlanButtonComponent } from '../../shared/plan-button/plan-button.component';
 
 export type CalculatorError = 'division-by-zero' | 'non-integral' | 'incomplete' | 'invalid';
 
 export type CalculatorKey =
-  | { readonly kind: 'digit'; readonly label: string }
+  | { readonly kind: 'digit'; readonly label: string; readonly value: number }
   | { readonly kind: 'operator'; readonly label: string; readonly operator: Operator; readonly ariaLabel: string }
   | { readonly kind: 'clear' | 'backspace' | 'equals'; readonly label: string; readonly ariaLabel: string };
 
@@ -28,7 +29,7 @@ const ERROR_MESSAGES: Readonly<Record<CalculatorError, string>> = {
   invalid: 'Something went wrong — press AC',
 };
 
-const digit = (label: string): CalculatorKey => ({ kind: 'digit', label });
+const digit = (label: string): CalculatorKey => ({ kind: 'digit', label, value: digitValue(label) });
 const operatorKey = (operator: Operator, ariaLabel: string): CalculatorKey => ({
   kind: 'operator',
   label: OPERATOR_SYMBOLS[operator],
@@ -41,13 +42,13 @@ export const KEYS: readonly CalculatorKey[] = [
   { kind: 'clear', label: 'AC', ariaLabel: 'All clear' },
   { kind: 'backspace', label: '⌫', ariaLabel: 'Delete last digit' },
   operatorKey('divide', 'Divide'),
-  digit('A'),
-  digit('B'),
-  digit('C'),
-  operatorKey('multiply', 'Multiply'),
   digit('D'),
   digit('E'),
   digit('F'),
+  operatorKey('multiply', 'Multiply'),
+  digit('A'),
+  digit('B'),
+  digit('C'),
   operatorKey('subtract', 'Subtract'),
   digit('7'),
   digit('8'),
@@ -67,7 +68,7 @@ export const KEYS: readonly CalculatorKey[] = [
   selector: 'app-calculator',
   templateUrl: 'calculator.page.html',
   styleUrls: ['calculator.page.scss'],
-  imports: [IonHeader, IonToolbar, IonContent],
+  imports: [IonHeader, IonToolbar, IonContent, PlanButtonComponent],
 })
 export class CalculatorPage {
   private readonly router = inject(Router);

@@ -6,6 +6,7 @@
       </span>
       <span class="screen-title">Calculator</span>
     </div>
+    <app-plan-button slot="end" />
   </ion-toolbar>
 </ion-header>
 
@@ -72,6 +73,9 @@
           (click)="press(key)"
         >
           {{ key.label }}
+          @if (key.kind === 'digit' && key.value >= 10) {
+            <span class="key-hint" aria-hidden="true">{{ key.value }}</span>
+          }
         </button>
       }
     </div>
