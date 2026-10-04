@@ -33,7 +33,6 @@ Aprenda e trabalhe com sistemas numéricos: converta, calcule e pratique em bin�
 
 - [Funcionalidades](#-funcionalidades)
 - [Explicações passo a passo](#-explicações-passo-a-passo)
-- [Planos](#-planos)
 - [Arquitetura](#-arquitetura)
 - [Como rodar](#-como-rodar)
 - [Roadmap](#-roadmap)
@@ -66,16 +65,6 @@ Exemplo de valor posicional:
 ```
 
 As explicações são compartilhadas entre Converter e Practice e ficam em [`src/app/domain/explanation/`](src/app/domain/explanation).
-
-## 💎 Planos
-
-| | FREE | PRO | PREMIUM |
-|---|:---:|:---:|:---:|
-| Bases | 2, 10, 16 | + 8 e 12 | 2 a 36 |
-| Prática por dia | 5 | 20 | Ilimitada |
-| Calculadora e conversor | ✓ | ✓ | ✓ |
-
-As bases bloqueadas continuam visíveis, com cadeado e o plano necessário; ao tocar nelas, o paywall abre. As regras ficam centralizadas em [`capabilities.ts`](src/app/core/subscription/capabilities.ts).
 
 ## 🏗️ Arquitetura
 
@@ -155,9 +144,6 @@ Depois rode pelo Android Studio. Para testar compras com o Test Store, prefira o
 npx ng build --configuration development
 npx cap sync android
 ```
-
-> [!IMPORTANT]
-> As barras de status e de navegação do Android são tratadas pelo lado nativo. O `index.html` não usa `viewport-fit=cover`, então o plugin SystemBars do Capacitor encaixa a janela entre as barras e a página recebe área segura zero. Não adicione `viewport-fit=cover` nem espaçamentos com `env(safe-area-inset-*)`, ou o recuo será aplicado duas vezes.
 
 ### 🧪 Testes
 
