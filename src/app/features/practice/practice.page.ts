@@ -17,6 +17,7 @@ import {
   usageForToday,
 } from '../../domain/practice';
 import { ConversionStepsComponent } from '../../shared/conversion-steps/conversion-steps.component';
+import { PlanButtonComponent } from '../../shared/plan-button/plan-button.component';
 import { DailyUsageStore } from './daily-usage.store';
 import { PRACTICE_CLOCK, PRACTICE_RANDOM } from './practice.tokens';
 
@@ -30,7 +31,7 @@ export type PracticePhase = 'loading' | 'question' | 'answered' | 'locked';
   selector: 'app-practice',
   templateUrl: 'practice.page.html',
   styleUrls: ['practice.page.scss'],
-  imports: [IonHeader, IonToolbar, IonContent, ConversionStepsComponent],
+  imports: [IonHeader, IonToolbar, IonContent, ConversionStepsComponent, PlanButtonComponent],
 })
 export class PracticePage implements ViewWillEnter {
   private readonly store = inject(DailyUsageStore);

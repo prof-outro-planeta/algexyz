@@ -15,6 +15,7 @@ import {
   normalizeNumeral,
 } from '../../domain/number-system';
 import { ConversionStepsComponent } from '../../shared/conversion-steps/conversion-steps.component';
+import { PlanButtonComponent } from '../../shared/plan-button/plan-button.component';
 
 export type ConverterValidation =
   | { readonly status: 'empty' }
@@ -27,7 +28,7 @@ type PickerTarget = 'from' | 'to';
   selector: 'app-converter',
   templateUrl: 'converter.page.html',
   styleUrls: ['converter.page.scss'],
-  imports: [IonHeader, IonToolbar, IonContent, IonModal, ConversionStepsComponent],
+  imports: [IonHeader, IonToolbar, IonContent, IonModal, ConversionStepsComponent, PlanButtonComponent],
 })
 export class ConverterPage {
   private readonly route = inject(ActivatedRoute);

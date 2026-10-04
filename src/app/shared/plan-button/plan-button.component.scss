@@ -1,0 +1,41 @@
+:host {
+  display: inline-flex;
+}
+
+.plan-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 0 var(--algexyz-space-3);
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--algexyz-color-on-navy);
+  background: var(--algexyz-color-shade);
+  border: var(--algexyz-border-width-thin) solid var(--algexyz-color-fg);
+  border-radius: var(--algexyz-radius);
+  box-shadow: var(--algexyz-shadow-button);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    transform: translate(var(--algexyz-press-offset), var(--algexyz-press-offset));
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: var(--algexyz-focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+.plan-button-upgrade {
+  color: var(--algexyz-color-accent-ink);
+  background: var(--algexyz-color-accent);
+}
