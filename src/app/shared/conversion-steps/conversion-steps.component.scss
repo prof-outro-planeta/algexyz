@@ -117,12 +117,134 @@ h4 {
   font-size: 20px;
   line-height: 1.1;
   letter-spacing: 0.06em;
+}
+
+// Groups alternate between two colors so each run of bits lines up with its digit.
+.grouped-bits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--algexyz-space-3);
+  row-gap: 2px;
+
+  sub {
+    margin-left: calc(2px - var(--algexyz-space-3));
+  }
+}
+
+.bit-run,
+.bit-group-bits,
+.bit-group-digit,
+.joined-digit {
   color: var(--algexyz-color-accent-text);
+
+  &.group-alt,
+  .group-alt > & {
+    color: var(--algexyz-color-info);
+  }
+}
+
+.bit-pad {
+  color: var(--algexyz-color-fg-subtle);
+}
+
+.bit-group {
+  border-color: var(--algexyz-color-accent-text);
+
+  &.group-alt {
+    border-color: var(--algexyz-color-info);
+  }
 }
 
 .bit-group-note {
   font-size: 10px;
   color: var(--algexyz-color-fg-subtle);
+}
+
+.places {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0 0 4px;
+  overflow-x: auto;
+  list-style: none;
+}
+
+.place {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 32px;
+  padding: 4px 3px;
+  border: var(--algexyz-border-width-thin) solid var(--algexyz-color-fg);
+}
+
+.place-value {
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--algexyz-color-info);
+}
+
+.place-digit {
+  font-family: var(--algexyz-font-mono);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.place-power {
+  font-family: var(--algexyz-font-mono);
+  font-size: 10px;
+  color: var(--algexyz-color-fg-subtle);
+
+  sup {
+    font-size: 8px;
+  }
+}
+
+.place.place-zero {
+  border-color: var(--algexyz-color-line-soft);
+
+  .place-value,
+  .place-digit {
+    color: var(--algexyz-color-fg-subtle);
+  }
+}
+
+.expansion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expansion-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+
+  sup {
+    font-size: 9px;
+  }
+}
+
+.expansion-op {
+  color: var(--algexyz-color-fg-subtle);
+}
+
+.expansion-term.place-zero {
+  color: var(--algexyz-color-fg-subtle);
+}
+
+.expansion-total {
+  font-size: 16px;
+  color: var(--algexyz-color-accent-text);
 }
 
 .step-joined {

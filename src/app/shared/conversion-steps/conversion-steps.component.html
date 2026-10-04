@@ -11,11 +11,25 @@
           </p>
         </div>
 
-        <p class="numeral-line">{{ explanation.input.numeral }}<sub>{{ explanation.input.base }}</sub></p>
+        <p class="numeral-line grouped-bits" [attr.aria-label]="explanation.input.numeral + ' in base ' + explanation.input.base">
+          @if (explanation.input.numeral.startsWith('-')) {
+            <span aria-hidden="true">-</span>
+          }
+          @for (group of explanation.groups; track $index) {
+            <span class="bit-run" [class.group-alt]="$odd" aria-hidden="true">
+              @if ($first && explanation.padding > 0) {
+                <span class="bit-pad">{{ group.bits.slice(0, explanation.padding) }}</span>{{ group.bits.slice(explanation.padding) }}
+              } @else {
+                {{ group.bits }}
+              }
+            </span>
+          }
+          <sub aria-hidden="true">{{ explanation.input.base }}</sub>
+        </p>
 
         <ol class="bit-groups" aria-label="Bit groups">
           @for (group of explanation.groups; track $index) {
-            <li class="bit-group">
+            <li class="bit-group" [class.group-alt]="$odd">
               <span class="bit-group-bits">{{ group.bits }}</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
               <span class="bit-group-digit">{{ group.digit }}</span>
@@ -24,7 +38,79 @@
           }
         </ol>
 
-        <p class="step-joined">Joined: <span class="mono">{{ explanation.output.numeral }}</span></p>
+        <p class="step-joined">
+          Joined:
+          <span class="mono">
+            @if (explanation.output.numeral.startsWith('-')) {
+              <span>-</span>
+            }
+            @for (group of explanation.groups; track $index) {
+              <span class="joined-digit" [class.group-alt]="$odd">{{ group.digit }}</span>
+            }
+          </span>
+        </p>
+      </article>
+    }
+    @case ('positional-expansion') {
+      @let base = explanation.input.base;
+      @let contributions = nonZeroContributions(explanation.terms);
+      <article class="card step">
+        <div>
+          <div class="step-kicker">Step 1</div>
+          <h4>Weigh each digit by its place</h4>
+          <p class="step-desc">
+            Each position is worth a power of {{ base }}, starting at {{ base }}<sup>0</sup> on the right.
+            Multiply every digit by the value above it, then add everything up.
+          </p>
+        </div>
+
+        <ol class="places" aria-label="Place values">
+          @for (term of explanation.terms; track $index) {
+            <li class="place" [class.place-zero]="term.digitValue === 0">
+              <span class="place-value">{{ term.placeValue }}</span>
+              <span class="place-digit">{{ term.digit }}</span>
+              <span class="place-power">{{ base }}<sup>{{ term.exponent }}</sup></span>
+            </li>
+          }
+        </ol>
+
+        <div class="expansion mono">
+          <p class="expansion-line">
+            @if (explanation.negative) {
+              <span>−(</span>
+            }
+            @for (term of explanation.terms; track $index) {
+              @if (!$first) {
+                <span class="expansion-op">+</span>
+              }
+              <span class="expansion-term" [class.place-zero]="term.digitValue === 0">{{ term.digitValue }}·{{ base }}<sup>{{ term.exponent }}</sup></span>
+            }
+            @if (explanation.negative) {
+              <span>)</span>
+            }
+          </p>
+          @if (contributions.length > 1) {
+            <p class="expansion-line">
+              <span class="expansion-op">=</span>
+              @if (explanation.negative) {
+                <span>−(</span>
+              }
+              @for (value of contributions; track $index) {
+                @if (!$first) {
+                  <span class="expansion-op">+</span>
+                }
+                <span class="expansion-term">{{ value }}</span>
+              }
+              @if (explanation.negative) {
+                <span>)</span>
+              }
+            </p>
+          }
+          <p class="expansion-line expansion-total">
+            <span class="expansion-op">=</span>
+            <span>{{ explanation.output.numeral }}</span>
+          </p>
+        </div>
       </article>
     }
   }

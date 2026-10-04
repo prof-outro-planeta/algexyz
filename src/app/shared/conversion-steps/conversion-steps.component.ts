@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { ConversionExplanation } from '../../domain/explanation';
+import { ConversionExplanation, PlaceValueTerm } from '../../domain/explanation';
 
 /** Renders a structured conversion explanation followed by the result line. */
 @Component({
@@ -13,4 +13,8 @@ export class ConversionStepsComponent {
   readonly fromBase = input.required<number>();
   readonly toBase = input.required<number>();
   readonly result = input.required<string>();
+
+  nonZeroContributions(terms: readonly PlaceValueTerm[]): readonly bigint[] {
+    return terms.filter((term) => term.contribution !== 0n).map((term) => term.contribution);
+  }
 }

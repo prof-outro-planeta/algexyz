@@ -6,6 +6,7 @@
       </span>
       <span class="screen-title">Converter</span>
     </div>
+    <app-plan-button slot="end" />
   </ion-toolbar>
 </ion-header>
 
@@ -84,6 +85,9 @@
           @switch (explanation.strategy) {
             @case ('bit-grouping') {
               <span class="steps-method">Bit-grouping shortcut</span>
+            }
+            @case ('positional-expansion') {
+              <span class="steps-method">Place values</span>
             }
           }
         }
