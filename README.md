@@ -9,7 +9,9 @@
 
 **Same value, different basis.**
 
-Aprenda e trabalhe com sistemas numéricos: converta, calcule e pratique em binário, octal, decimal, duodecimal e hexadecimal.
+Learn and work with number systems: convert, calculate and practice in binary, octal, decimal, duodecimal and hexadecimal.
+
+**English** · [Português](README.pt-BR.md)
 
 [![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)](https://angular.dev)
 [![Ionic](https://img.shields.io/badge/Ionic-9-3880FF?logo=ionic&logoColor=white)](https://ionicframework.com)
@@ -19,44 +21,43 @@ Aprenda e trabalhe com sistemas numéricos: converta, calcule e pratique em bin�
 [![RevenueCat](https://img.shields.io/badge/RevenueCat-13-F2545B)](https://www.revenuecat.com)
 [![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev)
 
-[![Android](https://img.shields.io/badge/plataforma-Android-3DDC84?logo=android&logoColor=white)](#-android)
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-0.7.0-F3701E)](package.json)
-[![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-4B607F)](LICENSE)
+[![Android](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](#-android)
+[![Version](https://img.shields.io/badge/version-0.7.0-F3701E)](package.json)
+[![License](https://img.shields.io/badge/license-MIT-4B607F)](LICENSE)
 
-[**Abrir no navegador**](https://algexyz-b8931.web.app/) · [Funcionalidades](#-funcionalidades) · [Como rodar](#-como-rodar) · [Roadmap](#-roadmap)
+[**Open in the browser**](https://algexyz-b8931.web.app/) · [Features](#-features) · [Getting started](#-getting-started) · [Roadmap](#-roadmap)
 
 </div>
 
 ---
 
-## Sumário
+## Contents
 
-- [Funcionalidades](#-funcionalidades)
-- [Explicações passo a passo](#-explicações-passo-a-passo)
-- [Arquitetura](#-arquitetura)
-- [Como rodar](#-como-rodar)
+- [Features](#-features)
+- [Step-by-step explanations](#-step-by-step-explanations)
+- [Architecture](#-architecture)
+- [Getting started](#-getting-started)
 - [Roadmap](#-roadmap)
-- [Autor e licença](#-autor-e-licença)
+- [Author and license](#-author-and-license)
 
-## ✨ Funcionalidades
+## ✨ Features
 
-| Aba | O que faz |
+| Tab | What it does |
 |---|---|
-| **Converter** | Converte números entre bases, valida os dígitos permitidos e mostra a conversão passo a passo. |
-| **Calculator** | Soma, subtrai, multiplica e divide inteiros na base escolhida, com precisão arbitrária (`bigint`). As teclas A–F mostram no canto o valor decimal (10–15). Uso ilimitado. |
-| **Practice** | Exercícios de conversão com resposta direta ou múltipla escolha, correção imediata e explicação, com limite diário conforme o plano. |
-| **Paywall** | Compara os planos e permite assinar e restaurar compras pelo RevenueCat. Abre pelo botão de plano no canto superior direito de cada aba. |
+| **Converter** | Converts numbers between bases, validates the allowed digits and shows the conversion step by step. |
+| **Calculator** | Adds, subtracts, multiplies and divides integers in the chosen base with arbitrary precision (`bigint`). Keys A–F show their decimal value (10–15) in the corner. Unlimited use. |
+| **Practice** | Conversion exercises with direct answer or multiple choice, instant feedback and an explanation, with a daily limit. |
 
-Tudo roda localmente: a matemática não depende de rede, então o app funciona offline.
+Everything runs locally: the math does not depend on the network, so the app works offline.
 
-## 🧮 Explicações passo a passo
+## 🧮 Step-by-step explanations
 
-| Conversão | Técnica |
+| Conversion | Technique |
 |---|---|
-| Binário → hexadecimal | **Agrupamento de bits:** os bits são separados em grupos de 4, com cores alternadas que ligam cada grupo ao dígito hexadecimal correspondente. Os zeros de preenchimento à esquerda aparecem esmaecidos. |
-| Qualquer base → decimal | **Valor posicional:** cada algarismo mostra acima o valor da sua posição (128, 64, 32… no binário), destacado quando conta e esmaecido quando é zero, seguido da soma. |
+| Binary → hexadecimal | **Bit grouping:** bits are split into groups of 4, with alternating colors that link each group to its hexadecimal digit. Leading padding zeros are dimmed. |
+| Any base → decimal | **Place value:** each digit shows its place value above it (128, 64, 32… in binary), highlighted when it counts and dimmed when it is zero, followed by the sum. |
 
-Exemplo de valor posicional:
+Place value example:
 
 ```
 11010110₂ = 1·2⁷ + 1·2⁶ + 0·2⁵ + 1·2⁴ + 0·2³ + 1·2² + 1·2¹ + 0·2⁰
@@ -64,39 +65,39 @@ Exemplo de valor posicional:
           = 214₁₀
 ```
 
-As explicações são compartilhadas entre Converter e Practice e ficam em [`src/app/domain/explanation/`](src/app/domain/explanation).
+Explanations are shared between Converter and Practice and live in [`src/app/domain/explanation/`](src/app/domain/explanation).
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
 ```
 src/app/
-├── domain/        Lógica pura em TypeScript, sem Angular, Ionic ou Capacitor
-│   ├── number-system/   Bases, dígitos e validação
-│   ├── conversion/      Conversão entre bases (bigint)
-│   ├── calculator/      Operações aritméticas
-│   ├── explanation/     Explicações passo a passo
-│   └── practice/        Geração de questões, correção e limite diário
+├── domain/        Pure TypeScript logic, no Angular, Ionic or Capacitor
+│   ├── number-system/   Bases, digits and validation
+│   ├── conversion/      Base conversion (bigint)
+│   ├── calculator/      Arithmetic operations
+│   ├── explanation/     Step-by-step explanations
+│   └── practice/        Question generation, grading and daily limit
 ├── core/
-│   ├── firebase/        Inicialização do Firebase e autenticação
-│   └── subscription/    Planos, capacidades e integração com RevenueCat
-├── features/      Telas: converter, calculator, practice, paywall
-├── shared/        Componentes reutilizados entre telas
-└── tabs/          Navegação por abas
+│   ├── firebase/        Firebase initialization and authentication
+│   └── subscription/    Plans, capabilities and RevenueCat integration
+├── features/      Screens: converter, calculator, practice, paywall
+├── shared/        Components reused across screens
+└── tabs/          Tab navigation
 ```
 
-- **Domínio isolado:** toda a matemática é testada sem framework.
-- **Assinaturas desacopladas:** as telas consultam apenas `SubscriptionCapabilities`. A dependência segue esta ordem: telas → capacidades → `SubscriptionService` → `SubscriptionGateway` → adaptador RevenueCat → SDK. Só `revenuecat-subscription.gateway.ts` importa o SDK.
-- **Estado único de assinatura:** o plano vem sempre do `CustomerInfo` do RevenueCat e nunca é concedido manualmente.
+- **Isolated domain:** all the math is tested without any framework.
+- **Decoupled subscriptions:** screens only query `SubscriptionCapabilities`. Dependencies flow in this order: screens → capabilities → `SubscriptionService` → `SubscriptionGateway` → RevenueCat adapter → SDK. Only `revenuecat-subscription.gateway.ts` imports the SDK.
+- **Single subscription state:** the plan always comes from RevenueCat's `CustomerInfo` and is never granted manually.
 
-## 🚀 Como rodar
+## 🚀 Getting started
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 20 ou superior
+- Node.js 20 or later
 - Ionic CLI: `npm install -g @ionic/cli`
-- Android Studio, para rodar no Android
+- Android Studio, to run on Android
 
-### Instalação
+### Installation
 
 ```bash
 git clone https://github.com/prof-outro-planeta/algexyz.git
@@ -104,31 +105,31 @@ cd algexyz
 npm install
 ```
 
-### Configuração
+### Configuration
 
-Os arquivos de ambiente não são versionados. Crie-os a partir do modelo:
+Environment files are not versioned. Create them from the template:
 
 ```bash
 cp src/environments/environment.example.ts src/environments/environment.ts
 cp src/environments/environment.example.ts src/environments/environment.prod.ts
 ```
 
-Depois preencha:
+Then fill in:
 
-- **`firebase`:** a configuração do app web no Firebase Console.
-- **`revenueCat.apiKey`:** a chave pública do SDK. Use a do Test Store (`test_...`) em desenvolvimento e a do Google Play (`goog_...`) em produção. Nunca use uma chave secreta.
-- No `environment.prod.ts`, defina `production: true` e `debugLogs: false`.
+- **`firebase`:** the web app configuration from the Firebase Console.
+- **`revenueCat.apiKey`:** the public SDK key. Use the Test Store key (`test_...`) in development and the Google Play key (`goog_...`) in production. Never use a secret key.
+- In `environment.prod.ts`, set `production: true` and `debugLogs: false`.
 
 > [!NOTE]
-> Sem a chave do RevenueCat, o app funciona normalmente no plano FREE.
+> Without a RevenueCat key, the app works normally on the FREE plan.
 
-### 🌐 Navegador
+### 🌐 Browser
 
 ```bash
 ionic serve
 ```
 
-As assinaturas só funcionam no app Android. No navegador, o paywall informa isso e o app fica no plano FREE.
+Subscriptions only work in the Android app. In the browser, the app stays on the FREE plan.
 
 ### 🤖 Android
 
@@ -138,48 +139,48 @@ npx cap sync android
 npx cap open android
 ```
 
-Depois rode pelo Android Studio. Para testar compras com o Test Store, prefira o build de desenvolvimento, que ativa os logs do SDK:
+Then run it from Android Studio. To test purchases with the Test Store, prefer the development build, which enables the SDK logs:
 
 ```bash
 npx ng build --configuration development
 npx cap sync android
 ```
 
-### 🧪 Testes
+### 🧪 Tests
 
 ```bash
 npm test
 ```
 
 <details>
-<summary><strong>Configuração do RevenueCat</strong></summary>
+<summary><strong>RevenueCat setup</strong></summary>
 
 <br />
 
-No dashboard do RevenueCat:
+In the RevenueCat dashboard:
 
-1. Crie os entitlements `pro` e `premium`.
-2. Crie os produtos `algexyz_pro_monthly` e `algexyz_premium_monthly` e associe cada um ao entitlement correspondente.
-3. Crie a offering `default`, marque como **Current** e adicione os pacotes `pro_monthly` e `premium_monthly`.
+1. Create the `pro` and `premium` entitlements.
+2. Create the `algexyz_pro_monthly` and `algexyz_premium_monthly` products and attach each one to its entitlement.
+3. Create the `default` offering, mark it as **Current** and add the `pro_monthly` and `premium_monthly` packages.
 
-Os preços exibidos no app vêm do RevenueCat, localizados; nenhum preço está fixo no código.
+Prices shown in the app come from RevenueCat, localized; no price is hardcoded.
 
 </details>
 
 ## 🗺️ Roadmap
 
-- [x] Conversor com validação de dígitos
-- [x] Calculadora em qualquer base disponível
-- [x] Prática diária com correção e explicação
-- [x] Assinaturas PRO e PREMIUM com RevenueCat
-- [x] Passo a passo por agrupamento de bits e por valor posicional
-- [ ] Passo a passo de decimal para outras bases (divisões sucessivas) e entre bases não decimais
-- [ ] Frações e complemento de dois (PRO)
-- [ ] Bases arbitrárias de 2 a 36 na interface (PREMIUM)
-- [ ] Publicação na Google Play Store
+- [x] Converter with digit validation
+- [x] Calculator in any available base
+- [x] Daily practice with grading and explanations
+- [x] PRO and PREMIUM subscriptions with RevenueCat
+- [x] Step by step by bit grouping and by place value
+- [ ] Step by step from decimal to other bases (repeated division) and between non-decimal bases
+- [ ] Fractions and two's complement (PRO)
+- [ ] Arbitrary bases from 2 to 36 in the UI (PREMIUM)
+- [ ] Google Play Store release
 
-## 👤 Autor e licença
+## 👤 Author and license
 
-Feito por **Ítalo Marques Rodrigues Silva**.
+Made by **Ítalo Marques Rodrigues Silva**.
 
-Distribuído sob a licença [MIT](LICENSE).
+Released under the [MIT](LICENSE) license.
